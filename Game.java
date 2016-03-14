@@ -1,18 +1,25 @@
 
 /**
-*							  		Game Class
-*							=============================
-*	The <code>Game</code> Class extends the <code>Frame</code> Class t
+*							  	Game Class
+*						=============================
+*	The <code>Game</code> Class extends the <code>Frame</code> Class.
 *	<p>
 *	The <code>paint</code> method will paint game pieces on <code>Game</code>
 *	after then have been initialized.
-*	The <code>setupGamePiece</code> method creates a new game piece (<code>Domino</code>)
-*	and places it on the <code>Game</code> based on the users input for its value and location.
-*	The <code>placeGamePiece</code> method prompts a user for an X and Y coordinates for
-*	(<code>Domino</code>) and places it on the <code>Game</code> based on that input.
-*	The <code>getInteger</code> method prompts a user to enter an <code>int</code> 
-*	and returns a result (int) if its exists inside the <code>Game</code> playable area.
-*	
+*	The <code>playersTurn</code> method creates a new <code>Domino</code>
+* 	and places it on the <code>Game</code> based on the users input 
+*	for its value and location.
+*	The <code>computersTurn</code> method creates a new <code>Domino</code>
+* 	with randomly generated value and location and places it on the
+* 	<code>Game</code> on the game board.
+* 	The <code>setDominoValue/code> method prompts a user to enter an 
+* 	<code>int</code> between 1 and 5 for the face value of the <code>Domino</code>.
+* 	The <code>setCoordinate</code> method prompts a user for a coordinate for
+* 	a (<code>Domino</code>) and places it on the <code>Game</code> based on 
+* 	that input.
+* 	The <code>getIntegerValue</code> method prompts a user to enter an
+*	<code>int</code> and returns a result (<code>int</code>).
+*
 *	@Author Michael Twardowski
 */
 import java.util.Scanner;
@@ -24,12 +31,12 @@ import java.awt.Graphics;
 public class Game extends Frame 
 {
 	/**
-	 * Game piece object
+	 * Game piece objects for the player and computer
 	 */
 	private Domino myDomino, theComputerDomino;
 	
 	/**
-	 * Indicated if a Domino has been initialized
+	 * Indicated if a <code>Domino</code> has been initialized
 	 */
 	private boolean isMyDominoPlaced = false,
 					isComputerDominoPlaced = false;
@@ -40,7 +47,10 @@ public class Game extends Frame
 	private CloseWindow myWindow;
 
 	/**
-	 * Height and Width for the <code>Game</code> window.
+	 * Height, and Width for the <code>Game</code> window.
+	 * The MAX_VALUE_X and MAX_VALUE_Y is playable area after the 
+	 * <code>Game</code> window border and <code>Domino</code> width is 
+	 * accounted for.
 	 */
 	private final int WIDTH = 800, 
 					  HEIGHT = 800,
@@ -48,9 +58,8 @@ public class Game extends Frame
 					  MAX_VALUE_Y;
 	
 	/**
-	 * Holds the insets for the created window
+	 * Holds the insets for the <code>Game</code> window
 	 */
-	
 	private Insets insets;
 
 	/**
@@ -63,10 +72,16 @@ public class Game extends Frame
 		
 		myGameTable.playersTurn();
 		myGameTable.computersTurn();
+		
+		/* useful for testing
+		*for(int i=0; i<50; i++){
+		*	myGameTable.computersTurn();
+		*}
+		*/
 	}
 
 	/**
-	 * The default constructor for the <code>Game</code> Frame. 
+	 * The default constructor for the <code>Game</code>. 
 	 */
 	public Game() 
 	{
@@ -88,13 +103,15 @@ public class Game extends Frame
 			dominoHeight = 100,
 			dominoDepth = 10;
 		
+		// determines the max possible location that a user can select for a
+		// domino's position
 		MAX_VALUE_X = WIDTH - insets.left - insets.right - dominoWidth - dominoDepth;
 		MAX_VALUE_Y = HEIGHT - insets.top - insets.bottom - dominoHeight - dominoDepth;
 		
 	} // end default constructor
 
 	/**
-	 * The <code>paint</code> method will paint game pieces on <code>Game</code>
+	 * The <code>paint</code> method will paint each <code>Domino</code> on <code>Game</code>
 	 * after then have been initialized.
 	 */
 	public void paint(Graphics pane){
@@ -103,19 +120,24 @@ public class Game extends Frame
 			if(isComputerDominoPlaced){
 				theComputerDomino.paint(pane);
 			}
-			
 		}
 	}
 	
 	/**
-	 * The <code>playersTurn</code> method creates a new game piece (<code>Domino</code>)
-	 * and places it on the <code>Game</code> based on the users input for its value and location.
+	 * The <code>playersTurn</code> method creates a new <code>Domino</code>
+	 * and places it on the <code>Game</code> based on the users input 
+	 * for its value and location.
 	 */
 	private void playersTurn(){
+
+		// sets up values for the domino
 		int leftFaceValue = setDominoValue(true);
 		int rightFaceValue = setDominoValue(false);
+		
+		// sets x and y coordinates
 		int x = setCoordinate(true);
 		int y = setCoordinate(false);
+		
 		myDomino = new Domino(x, y, leftFaceValue, rightFaceValue);
 		isMyDominoPlaced = true;
 		
@@ -123,29 +145,51 @@ public class Game extends Frame
 	}
 	
 	/**
-	 * The <code>computersTurn</code> method creates a new game piece (<code>Domino</code>)
-	 * and places it on the <code>Game</code> based on the users input for its value and location.
+	 * The <code>computersTurn</code> method creates a new <code>Domino</code>
+	 * with randomly generated value and location and places it on the
+	 * <code>Game</code> on the game board.
 	 */
 	private void computersTurn(){
+		
+		// generates random values from 1 to 5 for each face of the domino
 		int leftFaceValue = (int)(Math.random()*5 +1);
 		int rightFaceValue = (int)(Math.random()*5 +1);
-		int x, y;
+		
+		//generates a location for the domino that does not overlap myDomino
+		// or lie within a border
+		int x, y,
+			xOffset = insets.left + 10,
+			yOffset = insets.top + 10;
 		
 		do{
-			x = (int)(Math.random()*MAX_VALUE_X +1);
-			y = (int)(Math.random()*MAX_VALUE_Y +1);
-		}while(myDomino.doDominosOverlap(x,y));
+			x = (int)(Math.random()*(MAX_VALUE_X - xOffset) + xOffset);
+			y = (int)(Math.random()*(MAX_VALUE_Y - yOffset) + yOffset);
+		}while(myDomino.doDominosOverlap(x,y)); // checks for domino overlap
 		
 		theComputerDomino = new Domino(x, y, leftFaceValue, rightFaceValue);
+		
+		// checks to see if the new domino matches myDomino
 		myDomino.compareFaceValues(theComputerDomino);
+		
+		// delays display of domino
+		try {
+		    Thread.sleep(1500);  //1000 milliseconds is one second.
+		} catch(InterruptedException ex) {
+		    //Thread.currentThread().interrupt();
+		}
+		
 		isComputerDominoPlaced = true;
 		
 		repaint();
 	}
 	
 	 /**   
-	 * The <code>setDominoValue/code> method prompts a user to enter an <code>int</code> 
-	 * for the left and right face value of the <code>Domino</code>.
+	 * The <code>setDominoValue</code> method prompts a user to enter an 
+	 * <code>int</code> between 1 and 5 for the face value of the <code>Domino</code>.
+	 * <p>
+	 * @param isLeft is a <code>boolean</code> to determine what
+	 * side of the domino is being set up.
+	 * @return int of the selected value
 	 */
 	private int setDominoValue(boolean isLeft){
 		String side;
@@ -168,26 +212,31 @@ public class Game extends Frame
 
 	/**
 	 * The <code>setCoordinate</code> method prompts a user for a coordinate for
-	 * a (<code>Domino</code>) and places it on the <code>Game</code> based on that input.
-	 * @return
+	 * a (<code>Domino</code>) and places it on the <code>Game</code> based on 
+	 * that input.
+	 * <p>
+	 * @param isXCoordinate is a <code>boolean</code> to 
+	 * what determine what dimension the coordinate belongs to.
+	 * @return int of the selected value for the coordinate
 	 */
 	private int setCoordinate(boolean isXCoordinate){
+		// holds the name of the dimension being setup
 		String dimension;
 		
 		int maxValue,
 			offset,
 			dominoDepth = 10;
 		
-		//prevents the user from entering a position that would clip of part of domino
-		// the maximumWidth is the windowWidth - leftBorder  - rightBorder - dominoWidth - depthInX
-		// the maximumHeight is the windowHeight - topBorder  - bottomBorder - dominoHeight - depthInY
-		/** check this
-		 * 
-		 */
-		// sets the the tableTop origin for new game pieces to be 
-				// (leftInset + depthInX, topInset + depthInY)
-				// any value entered by the user will be offset by this amount. An entered value of
-				// (0,0) will have the top left corner of the game piece in the very top left corner of the tableTop
+		/* prevents the user from entering a position that would clip of part
+		* of domino the maximumWidth is:
+		* windowWidth - leftBorder  - rightBorder - dominoWidth - depthInX
+		* the maximumHeight is:
+		* windowHeight - topBorder  - bottomBorder - dominoHeight - depthInY
+		* sets the the tableTop origin for new game pieces to be 
+		* (leftInset + depthInX, topInset + depthInY)
+		* any value entered by the user will be offset by this amount. An entered value of
+		* (0,0) will have the top left corner of the game piece in the very top left corner of the tableTop
+		*/
 		if(isXCoordinate){
 			dimension = "x";
 			maxValue = MAX_VALUE_X;
@@ -207,13 +256,15 @@ public class Game extends Frame
 	}
 	
 	/**
-	 * The <code>getInteger</code> method prompts a user to enter an <code>int</code> 
-	 * and returns a result (int) if its exists inside the <code>Game</code> playable area.
+	 * The <code>getIntegerValue</code> method prompts a user to enter an
+	 * <code>int</code> and returns a result (<code>int</code>).
 	 * <p>
-	 * It accepts a <code>length</code> (int) that is the length of <code>Game</code> in a X or Y dimension.
+	 * It accepts two <code>int</code>, <code>min</code>  and <code>max</code>
+	 * correspond to the range that this method will accept for user input.
 	 * 
-	 * @param <code>length</code> (int) is the length of <code>Game</code> in a X or Y dimension.
-	 * @return <code>result</code> (int) is the coordinate input from the user.
+	 * @param min is the minimum value of that can be entered.
+	 * @param max is the maximum value of that can be entered.
+	 * @return result (int) is the coordinate input from the user.
 	 */
 	private int getIntegerValue(int min, int max){
 		String prompt = "Please enter an integer from " + min + " to " + max + ".";

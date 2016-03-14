@@ -1,17 +1,27 @@
 /**	
 *					         Domino Class
 *					=============================
-* The <code>Domino</code> class   The upper left posterior corner of the <code>Domino</code>  is drawn at point.
+* The <code>Domino</code> class creates a graphical object to be used in a
+* <code>Game</game>
+* The upper left posterior corner of the <code>Domino</code>  is drawn at point.
 * <p>
-* The <code>paint</code> method receives a <code>Graphics</code> object and draws a <code>Domino</code>.
-* The <code>drawBlank</code> method receives a <code>Graphics</code> object and draws a blank <code>Domino</code>.
-* The <code>setDominoLocation</code> method receives a <code>int</code> for the X and Y coordinates.
-* The <code>setDominoValue/code> method prompts a user to enter an <code>int</code> for the left and right face values.
-* The <code>getIntegerValue</code> method prompts a user to enter an <code>int</code> between 1-5 and returns a result<code>int</code>.
-* The <code>drawDot</code> method receives a <code>Graphics</code> object, an <code>int</code> for the X coordinate, 
-* and an <code>int</code> for the Y coordinate.
-* The <code>drawOne, drawTwo, drawThree, drawFour, drawFive</code> methods receive a <code>Graphics</code> object, and a <code>boolean</code>
+* The <code>paint</code> method receives a <code>Graphics</code> object and 
+* draws a <code>Domino</code>.
+* The <code>drawBlank</code> method receives a <code>Graphics</code> object 
+* and draws a blank <code>Domino</code>.
+* The <code>drawDot</code> method receives a <code>Graphics</code> object, 
+* an <code>int</code> for the X coordinate,and an <code>int</code> for the Y 
+* coordinate.
+* The <code>drawOne, drawTwo, drawThree, drawFour, drawFive</code> methods 
+* receive a <code>Graphics</code> object, and a <code>boolean</code>
 * that determines the side of the face of the <code>Domino</code> to be drawn on. 
+* The <code>doDominosOverlap</code> method returns true if coordinates passed
+* within the area of this <code>Domino</code>.
+* The <code>compareFaceValues</code> method checks to see the input parameter
+* <code>Domino</code> matches this <code>Domino</code>. 
+* The <code>flipDominoHorizontal</code> method will rotate the
+<code>Domino</code> 180 degrees.
+* 
 * 
 * @Author Michael Twardowski
 */
@@ -25,9 +35,9 @@ public class Domino
 	 * Dimensions for the <code>Domino</code> graphic
 	 */
     private static final int DOT_DIAMETER = 20,
-    				  HEIGHT = 100,
-    				  WIDTH = 200,
-    				  DEPTH = 10;
+    				  		 HEIGHT = 100,
+    				  		 WIDTH = 200,
+    				  		 DEPTH = 10;
     
     /**
      *  Minimum space between Dominos
@@ -44,30 +54,30 @@ public class Domino
 		        rightFaceValue;
 
 	/**
-	 *	The default constructor for <code>Domino</code> receives a <code>int</code> for the
-	 * X coordinate , Y coordinate, left face value, and right face value
+	 *	The constructor for a <code>Domino</code> receives a <code>int</code> 
+	 * for the X coordinate , Y coordinate, left face value, and right face value
 	 *  The upper left posterior corner of the <code>Domino</code> 
 	 * is drawn at point (x,y).
 	 * 
-	 * @param <code>x</code> is a <code>int</code> for the X coordinate of the Domino
-	 * @param <code>Y</code> is a <code>int</code> for the Y coordinate of the Domino
-	 * @param
-	 * @param
+	 * @param someX is a <code>int</code> for the X coordinate of the Domino
+	 * @param someY is a <code>int</code> for the Y coordinate of the Domino
+	 * @param leftValue is a <code>int</code> for the left face value.
+	 * @param rightValue is a <code>int</code> for the right face value.
 	 */
-	public Domino(int x, int y, int leftFaceValue, int rightFaceValue)
+	public Domino(int someX, int someY, int leftValue, int rightValue)
 	{
-		this.x = x;
-		this.y = y;
-		this.leftFaceValue = leftFaceValue;
-		this.rightFaceValue = rightFaceValue;
-	} // end default constructor
+		x = someX;
+		y = someY;
+		leftFaceValue = leftValue;
+		rightFaceValue = rightValue;
+	} // end constructor
 	
 
 	/**
 	 * The <code>paint</code> method receives a <code>Graphics</code> object
 	 * and draws a <code>Domino</code>.
 	 *
-	 * @param <code>pane</code> is a <code>Graphics</code> object
+	 * @param pane is a <code>Graphics</code> object
 	 */
 	public void paint(Graphics pane)
 	{
@@ -107,7 +117,7 @@ public class Domino
 	 * The <code>drawBlank</code> method receives a <code>Graphics</code> object
 	 * and draws a blank <code>Domino</code>.
 	 *
-	 * @param <code>pane</code> is a <code>Graphics</code> object
+	 * @param pane is a <code>Graphics</code> object
 	 */
     private void drawBlank(Graphics pane)
     {
@@ -139,23 +149,16 @@ public class Domino
     	pane.drawLine(x + WIDTH/2, y, x + WIDTH/2 - DEPTH, y - DEPTH);
     }
     
-	
-	/**
-	 * The <code>getIntegerValue</code> method prompts a user to enter an <code>int</code> 
-	 * between 1-5 and returns a result <code>int</code>.
-	 * 
-	 * @return <code>result</code> <code>int</code> is the value for input from the user.
-	 */
-    
 	/**   
-	 * The <code>drawDot</code> method receives a <code>Graphics</code> object, an <code>int</code>
-	 * for the X coordinate, and an <code>int</code> for the Y coordinate.
+	 * The <code>drawDot</code> method receives a <code>Graphics</code> object, 
+	 * an <code>int</code> for the X coordinate, and an <code>int</code> for the
+	 * Y coordinate.
 	 * <p>
 	 * It draws a dot, centered at the X, Y coordinates.
-	 * 
-	 * @param <code>pane</code> is a <code>Graphics</code> object
-	 * @param <code>centerX</code> is an <code>int</code> corresponding to X coordinate of the dot.
-	 * @param <code>centerY</code> is an <code>int</code> corresponding to Y coordinate of the dot.
+	 * <p>
+	 * @param pane is a <code>Graphics</code> object
+	 * @param centerX is an <code>int</code> corresponding to X coordinate of the dot.
+	 * @param centerY is an <code>int</code> corresponding to Y coordinate of the dot.
      */ 
     private void drawDot(Graphics pane, int centerX, int centerY)
 	{
@@ -163,14 +166,16 @@ public class Domino
 	}
 	
     /**   
-	 * The <code>drawOne</code> method receives a <code>Graphics</code> object, and a <code>boolean</code>
-	 * that determines the side of the face of the <code>Domino</code> to be drawn on. 
+	 * The <code>drawOne</code> method receives a <code>Graphics</code> object,
+	 * and a <code>boolean</code> that determines the side of the face of the
+	 * <code>Domino</code> to be drawn on. 
 	 * <p>
-	 * If the <code>boolean</code> is <code>true</code> the one dot will be drawn centered on the left face of the 
-	 * <code>Domino</code>. If false, it the dot will be drawn on the right.
-	 * 
-	 * @param <code>pane</code> is a <code>Graphics</code> object
-	 * @param <code>isLeft</code> is a <code>boolean</code> 
+	 * If the <code>boolean</code> is <code>true</code> the one dot will be 
+	 * drawn centered on the left face of the <code>Domino</code>. 
+	 * If false, it the dot will be drawn on the right.
+	 * <p>
+	 * @param pane is a <code>Graphics</code> object
+	 * @param isLeft is a <code>boolean</code> 
      */ 
     private void drawOne(Graphics pane, boolean isLeft)
     {
@@ -192,14 +197,16 @@ public class Domino
     }
     
     /**   
-	 * The <code>drawTwo</code> method receives a <code>Graphics</code> object, and a <code>boolean</code>
-	 * that determines the side of the face of the <code>Domino</code> to be drawn on. 
+	 * The <code>drawTwo</code> method receives a <code>Graphics</code> object,
+	 * and a <code>boolean</code> that determines the side of the face of the 
+	 * <code>Domino</code> to be drawn on. 
 	 * <p>
-	 * If the <code>boolean</code> is <code>true</code> the two dots will be drawn on the left face of the 
-	 * <code>Domino</code>. If false, it the dots will be drawn on the right.
-	 * 
-	 * @param <code>pane</code> is a <code>Graphics</code> object
-	 * @param <code>isLeft</code> is a <code>boolean</code> 
+	 * If the <code>boolean</code> is <code>true</code> the two dots will be 
+	 * drawn on the left face of the <code>Domino</code>. 
+	 * If false, it the dots will be drawn on the right.
+	 * <p>
+	 * @param pane is a <code>Graphics</code> object
+	 * @param isLeft is a <code>boolean</code> 
      */ 
     private void drawTwo(Graphics pane, boolean isLeft) 
     {
@@ -228,14 +235,16 @@ public class Domino
     }
     
     /**   
-	 * The <code>drawThree</code> method receives a <code>Graphics</code> object, and a <code>boolean</code>
-	 * that determines the side of the face of the <code>Domino</code> to be drawn on. 
+	 * The <code>drawThree</code> method receives a <code>Graphics</code> object,
+	 * and a <code>boolean</code> that determines the side of the face of the 
+	 * <code>Domino</code> to be drawn on. 
 	 * <p>
-	 * If the <code>boolean</code> is <code>true</code> the three dots will be drawn on the left face of the 
-	 * <code>Domino</code>. If false, it the dots will be drawn on the right.
-	 * 
-	 * @param <code>pane</code> is a <code>Graphics</code> object
-	 * @param <code>isLeft</code> is a <code>boolean</code> 
+	 * If the <code>boolean</code> is <code>true</code> the three dots will be 
+	 * drawn on the left face of the <code>Domino</code>. 
+	 * If false, it the dots will be drawn on the right.
+	 * <p>
+	 * @param pane is a <code>Graphics</code> object
+	 * @param isLeft is a <code>boolean</code> 
      */ 
     private void drawThree(Graphics pane, boolean isLeft)
     {
@@ -244,14 +253,16 @@ public class Domino
     }
     
     /**   
-	 * The <code>drawFour</code> method receives a <code>Graphics</code> object, and a <code>boolean</code>
-	 * that determines the side of the face of the <code>Domino</code> to be drawn on. 
+	 * The <code>drawFour</code> method receives a <code>Graphics</code> object,
+	 * and a <code>boolean</code> that determines the side of the face of the
+	 * <code>Domino</code> to be drawn on. 
 	 * <p>
-	 * If the <code>boolean</code> is <code>true</code> the four dots will be drawn on the left face of the 
-	 * <code>Domino</code>. If false, it the dots will be drawn on the right.
+	 * If the <code>boolean</code> is <code>true</code> the four dots will be
+	 * drawn on the left face of the <code>Domino</code>. 
+	 * If false, it the dots will be drawn on the right.
 	 * 
-	 * @param <code>pane</code> is a <code>Graphics</code> object
-	 * @param <code>isLeft</code> is a <code>boolean</code> 
+	 * @param pane is a <code>Graphics</code> object
+	 * @param isLeft is a <code>boolean</code> 
      */ 
     private void drawFour(Graphics pane, boolean isLeft)
     {
@@ -282,14 +293,16 @@ public class Domino
     }
     
     /**   
-	 * The <code>drawFive</code> method receives a <code>Graphics</code> object, and a <code>boolean</code>
-	 * that determines the side of the face of the <code>Domino</code> to be drawn on. 
+	 * The <code>drawFive</code> method receives a <code>Graphics</code> object,
+	 * and a <code>boolean</code> that determines the side of the face of the
+	 * <code>Domino</code> to be drawn on. 
 	 * <p>
-	 * If the <code>boolean</code> is <code>true</code> the five dots will be drawn on the left face of the 
-	 * <code>Domino</code>. If false, it the dots will be drawn on the right.
-	 * 
-	 * @param <code>pane</code> is a <code>Graphics</code> object
-	 * @param <code>isLeft</code> is a <code>boolean</code> 
+	 * If the <code>boolean</code> is <code>true</code> the five dots will be
+	 * drawn on the left face of the <code>Domino</code>. 
+	 * If false, it the dots will be drawn on the right.
+	 * <p>
+	 * @param pane is a <code>Graphics</code> object
+	 * @param isLeft is a <code>boolean</code> 
      */ 
     private void drawFive(Graphics pane, boolean isLeft)
     {
@@ -297,9 +310,17 @@ public class Domino
     	drawOne(pane, isLeft);
     }
     
+    /**
+     * The <code>doDominosOverlap</code> method returns true if coordinates passed
+     *  lie within the area of this <code>Domino</code>.
+     * <p>
+     * @param x <code>int</code> for the x coordinate to be checked.
+     * @param y <code>int</code> for the y coordinate to be checked.
+     * @return true if coordinate the coordinate is the <code>Domino</code> area.
+     */
     public boolean doDominosOverlap(int x,int y){
-    	if((x >= this.x)&&(x <= this.x + WIDTH + DEPTH)||
-    	  (y >= this.y)&&(y <= this.y + HEIGHT +DEPTH)){
+    	if((x >= this.x - DEPTH - WIDTH)&&(x <= this.x + DEPTH + WIDTH)&&
+    	  (y >= this.y - DEPTH - HEIGHT)&&(y <= this.y + DEPTH + HEIGHT)){
     		return true;
     	}
     	else{
@@ -308,36 +329,43 @@ public class Domino
     }
     
     /**
-     * The isMatch method checks to see if the given side of a Domino matches
-     * either side of this Domino
-     * @param domino
-     * @param boolean for the left side
-     * @return
+     * The <code>compareFaceValues</code> method checks to see the input parameter
+     * <code>Domino</code> matches this <code>Domino</code>. 
+     * <p>
+     * @param domino to be compared to
      */
     public void compareFaceValues(Domino domino){
+    	String prompt = "There's no match!";
+    	
     	if(leftFaceValue == domino.leftFaceValue){
 			domino.flipDominoHorizontal();
 			domino.x = x - WIDTH - DEPTH - SPACING;
 			domino.y = y;
+			prompt = "It's a Match!";
     	}
     	else if(rightFaceValue == domino.leftFaceValue){
     		domino.x = x + WIDTH + DEPTH + SPACING;
 			domino.y = y;
+			prompt = "It's a Match!";
     	}
     	else if(leftFaceValue == domino.rightFaceValue){
     		domino.x = x - WIDTH - DEPTH - SPACING;
 			domino.y = y;
+			prompt = "It's a Match!";
     	}
     	else if(rightFaceValue == domino.rightFaceValue){
 			domino.flipDominoHorizontal();
 			domino.x = x + WIDTH + DEPTH + SPACING;
 			domino.y = y;
+			prompt = "It's a Match!";
     	}
+    	
+    	System.out.println(prompt);
     }
     
     /**
-     * The flipDominoHorizontal will rotate the Domino 180 degrees.
-     * @param domino
+     * The <code>flipDominoHorizontal</code> method will rotate the
+     *  <code>Domino</code> 180 degrees.
      */
     private void flipDominoHorizontal(){
     	int tempFaceValue = leftFaceValue;
